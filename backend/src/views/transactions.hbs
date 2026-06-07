@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="page_title">Market · Transactions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/transactions.css" />
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__logo">
+      <span class="logo-mark">M</span>
+      <span class="logo-text">Market</span>
+    </div>
+
+    <nav class="sidebar__nav">
+      <a href="/" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span data-i18n="nav_dashboard">Dashboard</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        <span data-i18n="nav_products">Products</span>
+      </a>
+      <a href="transactions.html" class="nav-item nav-item--active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span data-i18n="nav_transactions">Transactions</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        <span data-i18n="nav_categories">Categories</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span data-i18n="nav_analytics">Analytics</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <!-- Language switcher -->
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="uz">UZ</button>
+        <button class="lang-btn" data-lang="cyril">УЗ</button>
+      </div>
+      <div class="admin-badge">
+        <div class="admin-avatar">A</div>
+        <div>
+          <div class="admin-name" data-i18n="admin_label">Admin</div>
+          <div class="admin-role" data-i18n="admin_role">Superuser</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__title">
+        <h1 data-i18n="page_heading">Transactions</h1>
+        <span class="topbar__date" id="topbar-date"></span>
+      </div>
+      <button class="btn btn--primary" id="open-modal-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span data-i18n="btn_add_transaction">Add Transaction</span>
+      </button>
+    </header>
+
+    <!-- KPI Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card kpi-card--green">
+        <div class="kpi-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="kpi-card__label" data-i18n="kpi_total_input">Total Input</div>
+        <div class="kpi-card__value" id="kpi-input-qty">0</div>
+        <div class="kpi-card__sub" id="kpi-input-val">$0</div>
+      </div>
+      <div class="kpi-card kpi-card--rose">
+        <div class="kpi-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+        </div>
+        <div class="kpi-card__label" data-i18n="kpi_total_output">Total Output</div>
+        <div class="kpi-card__value" id="kpi-output-qty">0</div>
+        <div class="kpi-card__sub" id="kpi-output-val">$0</div>
+      </div>
+      <div class="kpi-card kpi-card--amber">
+        <div class="kpi-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="kpi-card__label" data-i18n="kpi_gross_profit">Gross Profit</div>
+        <div class="kpi-card__value" id="kpi-profit">$0</div>
+        <div class="kpi-card__sub" data-i18n="kpi_profit_sub">revenue − cost</div>
+      </div>
+      <div class="kpi-card kpi-card--blue">
+        <div class="kpi-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="kpi-card__label" data-i18n="kpi_total_txn">Total Transactions</div>
+        <div class="kpi-card__value" id="kpi-total">0</div>
+        <div class="kpi-card__sub" data-i18n="kpi_all_time">all time</div>
+      </div>
+    </section>
+
+    <!-- Filters & Table -->
+    <section class="table-section">
+      <div class="table-section__header">
+        <h2 data-i18n="section_history">Transaction History</h2>
+        <div class="table-controls">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="search-input" data-i18n-placeholder="search_placeholder" placeholder="Search product…" />
+          </div>
+          <select id="type-filter" class="filter-select">
+            <option value="" data-i18n="filter_all">All Types</option>
+            <option value="INPUT" data-i18n="filter_input">INPUT</option>
+            <option value="OUTPUT" data-i18n="filter_output">OUTPUT</option>
+          </select>
+          <select id="product-filter" class="filter-select">
+            <option value="" data-i18n="filter_all_products">All Products</option>
+          </select>
+          <button class="btn btn--ghost btn--sm" id="export-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span data-i18n="btn_export">Export CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="txn-table">
+          <thead>
+            <tr>
+              <th data-i18n="th_id">#</th>
+              <th data-i18n="th_product">Product</th>
+              <th data-i18n="th_type">Type</th>
+              <th data-i18n="th_qty">Quantity</th>
+              <th data-i18n="th_price">Unit Price</th>
+              <th data-i18n="th_total">Total</th>
+              <th data-i18n="th_date">Date</th>
+              <th data-i18n="th_actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="txn-tbody"></tbody>
+        </table>
+
+        <div class="empty-state" id="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <p data-i18n="empty_msg">No transactions found.</p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
+    </section>
+
+  </main>
+
+  <!-- Add Transaction Modal -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal__header">
+        <h2 data-i18n="modal_title">New Transaction</h2>
+        <button class="modal__close" id="close-modal-btn" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal__body">
+        <!-- Type Toggle -->
+        <div class="type-toggle">
+          <button class="type-btn type-btn--input active" data-type="INPUT">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+            <span data-i18n="type_input">INPUT</span>
+          </button>
+          <button class="type-btn type-btn--output" data-type="OUTPUT">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+            <span data-i18n="type_output">OUTPUT</span>
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label for="f-product" data-i18n="label_product">Product</label>
+          <select id="f-product">
+            <option value="">-- select product --</option>
+            {{#each products}}
+            <option value="{{this.id}}" data-input="{{this.input_price}}" data-output="{{this.output_price}}" data-stock="{{this.quantity}}">
+              {{this.product_name}}
+            </option>
+            {{/each}}
+          </select>
+          <span class="field-error" id="err-product"></span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-quantity" data-i18n="label_qty">Quantity</label>
+            <input type="number" id="f-quantity" placeholder="0" min="1" step="1" />
+            <span class="field-error" id="err-quantity"></span>
+          </div>
+          <div class="form-group">
+            <label for="f-price" data-i18n="label_price">Unit Price ($)</label>
+            <input type="number" id="f-price" placeholder="0.00" min="0" step="0.01" />
+            <span class="field-error" id="err-price"></span>
+          </div>
+        </div>
+
+        <!-- Live Summary -->
+        <div class="txn-summary" id="txn-summary">
+          <div class="txn-summary__row">
+            <span data-i18n="summary_total_cost">Total Amount</span>
+            <strong id="summary-total">—</strong>
+          </div>
+          <div class="txn-summary__row">
+            <span data-i18n="summary_stock">Current Stock</span>
+            <strong id="summary-stock">—</strong>
+          </div>
+          <div class="txn-summary__row" id="summary-after-row">
+            <span data-i18n="summary_after">Stock After</span>
+            <strong id="summary-after">—</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal__footer">
+        <button class="btn btn--ghost" id="cancel-btn" data-i18n="btn_cancel">Cancel</button>
+        <button class="btn btn--primary" id="save-btn" data-i18n="btn_save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="/js/transactions.js"></script>
+</body>
+</html>

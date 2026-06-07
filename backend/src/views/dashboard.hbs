@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Market · Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__logo">
+      <span class="logo-mark">M</span>
+      <span class="logo-text">Market</span>
+    </div>
+
+    <nav class="sidebar__nav">
+      <a href="#" class="nav-item nav-item--active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        </svg>
+        <span data-i18n="nav_dashboard">Dashboard</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        </svg>
+        <span data-i18n="nav_products">Products</span>
+      </a>
+      <a href="transactions" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 01-8 0" />
+        </svg>
+        <span data-i18n="nav_transactions">Transactions</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+        </svg>
+        <span data-i18n="nav_categories">Categories</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <line x1="18" y1="20" x2="18" y2="10" />
+          <line x1="12" y1="20" x2="12" y2="4" />
+          <line x1="6" y1="20" x2="6" y2="14" />
+        </svg>
+        <span data-i18n="nav_analytics">Analytics</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="uz">UZ</button>
+        <button class="lang-btn" data-lang="cyril">УЗ</button>
+      </div>
+      <div class="admin-badge">
+        <div class="admin-avatar">A</div>
+        <div>
+          <div class="admin-name">Admin</div>
+          <div class="admin-role">Superuser</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__title">
+        <h1 data-i18n="page_heading">Dashboard</h1>
+        <span class="topbar__date" id="topbar-date"></span>
+      </div>
+      <button class="btn btn--primary" id="open-modal-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        <span data-i18n="btn_add_product">Add Product</span>
+      </button>
+    </header>
+
+    <!-- KPI Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card kpi-card--green">
+        <div class="kpi-card__label" data-i18n="kpi_total_products">Total Products</div>
+        <div class="kpi-card__value" id="kpi-total">0</div>
+        <div class="kpi-card__sub" data-i18n="kpi_products_sub">items in catalog</div>
+      </div>
+      <div class="kpi-card kpi-card--blue">
+        <div class="kpi-card__label" data-i18n="kpi_total_stock">Total Stock</div>
+        <div class="kpi-card__value" id="kpi-stock">0</div>
+        <div class="kpi-card__sub" data-i18n="kpi_stock_sub">units available</div>
+      </div>
+      <div class="kpi-card kpi-card--amber">
+        <div class="kpi-card__label" data-i18n="kpi_inv_value">Inventory Value</div>
+        <div class="kpi-card__value" id="kpi-value">$0</div>
+        <div class="kpi-card__sub" data-i18n="kpi_value_sub">at input price</div>
+      </div>
+      <div class="kpi-card kpi-card--rose">
+        <div class="kpi-card__label" data-i18n="kpi_pot_revenue">Potential Revenue</div>
+        <div class="kpi-card__value" id="kpi-revenue">$0</div>
+        <div class="kpi-card__sub" data-i18n="kpi_revenue_sub">at output price</div>
+      </div>
+    </section>
+
+    <!-- Products Table -->
+    <section class="table-section">
+      <div class="table-section__header">
+        <h2 data-i18n="section_products">Products</h2>
+        <div class="table-controls">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="search-input" data-i18n-placeholder="search_placeholder"
+              placeholder="Search products…" />
+          </div>
+          <select id="category-filter" class="filter-select">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-i18n="th_product">Product</th>
+              <th data-i18n="th_category">Category</th>
+              <th data-i18n="th_stock">Stock</th>
+              <th data-i18n="th_buy">Buy Price</th>
+              <th data-i18n="th_sell">Sell Price</th>
+              <th data-i18n="th_margin">Margin</th>
+              <th data-i18n="th_actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-tbody">
+            {{#each products}}
+            <tr>
+              <td style="color:var(--text-muted);font-size:0.8rem"></td>
+              <td class="product-name-cell">{{this.name}}</td>
+              <td><span class="badge badge--category">{{this.category_id}}</span></td>
+              <td class="stock-cell ${p.quantity <= 10 ? " stock-low" : "stock-ok" }">{{this.quantity.toLocaleString()}}
+              </td>
+              <td>$ {{this.input_price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}}</td>
+              <td>$ {{this.output_price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}}</td>
+              {{!-- <td class="margin-cell ${margin >= 0 ? " margin-positive" : "margin-negative" }">${margin.toFixed(1)}% --}}
+              </td>
+              <td><button class="btn--danger-sm" onclick="deleteProduct({{this.id}})">Remove</button></td>
+
+            </tr>
+            {{/each}}
+            <!-- Populated by TS -->
+          </tbody>
+        </table>
+        <div class="empty-state" id="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path
+              d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+          </svg>
+          <p>No products yet. Add your first product!</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Add Product Modal -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal__header">
+        <h2 id="modal-title" data-i18n="modal_title">Add New Product</h2>
+        <button class="modal__close" id="close-modal-btn" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal__body">
+        <div class="form-group">
+          <label for="f-name" data-i18n="label_name">Product Name</label>
+          <input type="text" id="f-name" placeholder="e.g. Wireless Headphones" />
+          <span class="field-error" id="err-name"></span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-input-price" data-i18n="label_buy">Buy Price ($)</label>
+            <input type="number" id="f-input-price" placeholder="0.00" min="0" step="0.01" />
+            <span class="field-error" id="err-input-price"></span>
+          </div>
+          <div class="form-group">
+            <label for="f-output-price" data-i18n="label_sell">Sell Price ($)</label>
+            <input type="number" id="f-output-price" placeholder="0.00" min="0" step="0.01" />
+            <span class="field-error" id="err-output-price"></span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-quantity" data-i18n="label_qty">Quantity</label>
+            <input type="number" id="f-quantity" placeholder="0" min="0" step="1" />
+            <span class="field-error" id="err-quantity"></span>
+          </div>
+          <div class="form-group">
+            <label for="f-category" data-i18n="label_category">Category</label>
+            <select id="f-category">
+              <option value="">Select category</option>
+              {{#each categories}}
+              <option value="{{this.id}}">{{this.category_name}}</option>
+              {{/each}}
+            </select>
+            <span class="field-error" id="err-category"></span>
+          </div>
+        </div>
+
+        <!-- Live Margin Calculator -->
+        <div class="margin-preview" id="margin-preview">
+          <div class="margin-preview__label" data-i18n="margin_preview">Margin Preview</div>
+          <div class="margin-preview__row">
+            <span data-i18n="preview_profit">Profit per unit</span>
+            <strong id="preview-profit">—</strong>
+          </div>
+          <div class="margin-preview__row">
+            <span data-i18n="preview_margin">Margin %</span>
+            <strong id="preview-margin">—</strong>
+          </div>
+          <div class="margin-preview__row">
+            <span data-i18n="preview_stock_val">Total stock value (buy)</span>
+            <strong id="preview-stock-value">—</strong>
+          </div>
+          <div class="margin-preview__bar-wrap">
+            <div class="margin-preview__bar" id="preview-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal__footer">
+        <button class="btn btn--ghost" id="cancel-btn" data-i18n="btn_cancel">Cancel</button>
+        <button class="btn btn--primary" id="save-btn" data-i18n="btn_save">Save Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+
+</html>

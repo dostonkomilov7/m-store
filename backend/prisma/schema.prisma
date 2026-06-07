@@ -1,0 +1,46 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name Json @unique @db.JsonB
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id           Int           @id @default(autoincrement())
+  name         Json          @unique @db.JsonB
+  description  Json?         @db.JsonB
+  input_price  Decimal       @db.Decimal(10, 2)
+  output_price Decimal       @db.Decimal(10, 2)
+  quantity     Int           @default(1) @db.SmallInt
+  category_id  Int           @db.SmallInt
+  transactions Transaction[]
+  category     Category?     @relation(fields: [category_id], references: [id])
+
+  @@map("products")
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+
+  product_id Int     @db.SmallInt
+  product    Product @relation(fields: [product_id], references: [id])
+
+  type     String  @db.VarChar()
+  quantity Int     @db.SmallInt
+  price    Decimal @db.Decimal(10, 2)
+
+  @@map("transactions")
+
+}
