@@ -10,7 +10,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:wght@300;400;500&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="../styles/dashboard.css" />
 </head>
 
 <body>
@@ -65,15 +65,15 @@
 
     <div class="sidebar__footer">
       <div class="lang-switcher">
-        <button class="lang-btn active" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="uz">UZ</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn active" data-lang="uz">UZ</button>
         <button class="lang-btn" data-lang="cyril">УЗ</button>
       </div>
       <div class="admin-badge">
-        <div class="admin-avatar">A</div>
+        <div class="admin-avatar">M</div>
         <div>
-          <div class="admin-name">Admin</div>
-          <div class="admin-role">Superuser</div>
+          <div class="admin-name">Muhammadjon</div>
+          <div class="admin-role">Admin</div>
         </div>
       </div>
     </div>
@@ -111,12 +111,12 @@
       </div>
       <div class="kpi-card kpi-card--amber">
         <div class="kpi-card__label" data-i18n="kpi_inv_value">Inventory Value</div>
-        <div class="kpi-card__value" id="kpi-value">$0</div>
+        <div class="kpi-card__value" id="kpi-value">0</div>
         <div class="kpi-card__sub" data-i18n="kpi_value_sub">at input price</div>
       </div>
       <div class="kpi-card kpi-card--rose">
-        <div class="kpi-card__label" data-i18n="kpi_pot_revenue">Potential Revenue</div>
-        <div class="kpi-card__value" id="kpi-revenue">$0</div>
+        <div class="kpi-card__label" data-i18n="kpi_pot_revenue">Potential Revenue in UZS</div>
+        <div class="kpi-card__value" id="kpi-revenue">0</div>
         <div class="kpi-card__sub" data-i18n="kpi_revenue_sub">at output price</div>
       </div>
     </section>
@@ -155,21 +155,6 @@
             </tr>
           </thead>
           <tbody id="products-tbody">
-            {{#each products}}
-            <tr>
-              <td style="color:var(--text-muted);font-size:0.8rem"></td>
-              <td class="product-name-cell">{{this.name}}</td>
-              <td><span class="badge badge--category">{{this.category_id}}</span></td>
-              <td class="stock-cell ${p.quantity <= 10 ? " stock-low" : "stock-ok" }">{{this.quantity.toLocaleString()}}
-              </td>
-              <td>$ {{this.input_price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}}</td>
-              <td>$ {{this.output_price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}}</td>
-              {{!-- <td class="margin-cell ${margin >= 0 ? " margin-positive" : "margin-negative" }">${margin.toFixed(1)}% --}}
-              </td>
-              <td><button class="btn--danger-sm" onclick="deleteProduct({{this.id}})">Remove</button></td>
-
-            </tr>
-            {{/each}}
             <!-- Populated by TS -->
           </tbody>
         </table>
@@ -199,6 +184,16 @@
       </div>
 
       <div class="modal__body">
+        <div class="form-group">
+          <label for="f-name" data-i18n="label_name">Product Name</label>
+          <input type="text" id="f-name" placeholder="e.g. Wireless Headphones" />
+          <span class="field-error" id="err-name"></span>
+        </div>
+        <div class="form-group">
+          <label for="f-name" data-i18n="label_name">Mahsulot Nomi</label>
+          <input type="text" id="f-name" placeholder="e.g. Wireless Headphones" />
+          <span class="field-error" id="err-name"></span>
+        </div>
         <div class="form-group">
           <label for="f-name" data-i18n="label_name">Product Name</label>
           <input type="text" id="f-name" placeholder="e.g. Wireless Headphones" />
@@ -267,7 +262,7 @@
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <script src="/js/dashboard.js"></script>
+  <script src="../ts/dashboard.ts" type="module"></script>
 </body>
 
 </html>

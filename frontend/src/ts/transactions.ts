@@ -1,6 +1,59 @@
 // ─── i18n ──────────────────────────────────────────────────────────────────
 
-const TRANSLATIONS = {
+type Lang = "en" | "uz" | "cyril";
+
+interface Translation {
+  page_title: string;
+  page_heading: string;
+  nav_dashboard: string;
+  nav_products: string;
+  nav_transactions: string;
+  nav_categories: string;
+  nav_analytics: string;
+  admin_label: string;
+  admin_role: string;
+  btn_add_transaction: string;
+  kpi_total_input: string;
+  kpi_total_output: string;
+  kpi_gross_profit: string;
+  kpi_profit_sub: string;
+  kpi_total_txn: string;
+  kpi_all_time: string;
+  section_history: string;
+  search_placeholder: string;
+  filter_all: string;
+  filter_input: string;
+  filter_output: string;
+  filter_all_products: string;
+  btn_export: string;
+  th_id: string;
+  th_product: string;
+  th_type: string;
+  th_qty: string;
+  th_price: string;
+  th_total: string;
+  th_date: string;
+  th_actions: string;
+  empty_msg: string;
+  modal_title: string;
+  label_product: string;
+  label_qty: string;
+  label_price: string;
+  type_input: string;
+  type_output: string;
+  summary_total_cost: string;
+  summary_stock: string;
+  summary_after: string;
+  btn_cancel: string;
+  btn_save: string;
+  btn_delete: string;
+  toast_added: (name: string, type: string) => string;
+  toast_deleted: (id: number) => string;
+  stock_warning: (avail: number) => string;
+  stock_overflow: string;
+}
+
+const TRANSLATIONS: Record<Lang, Translation> = {
   en: {
     page_title: "Market · Transactions",
     page_heading: "Transactions",
@@ -155,34 +208,60 @@ const TRANSLATIONS = {
   }
 };
 
-let currentLang = "en";
-function t(key, ...args) {
+let currentLang: Lang = "en";
+
+function t(key: keyof Translation, ...args: (string | number)[]): string {
   const val = TRANSLATIONS[currentLang]?.[key] ?? TRANSLATIONS.en[key] ?? key;
-  return typeof val === "function" ? val(...args) : val;
+  return typeof val === "function" ? (val as (...a: (string | number)[]) => string)(...args) : val as string;
 }
 
-function applyTranslations() {
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.getAttribute("data-i18n");
+function applyTranslations(): void {
+  document.querySelectorAll<HTMLElement>("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n") as keyof Translation;
     el.textContent = t(key);
   });
-  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-    el.placeholder = t(el.getAttribute("data-i18n-placeholder"));
+  document.querySelectorAll<HTMLInputElement>("[data-i18n-placeholder]").forEach(el => {
+    el.placeholder = t(el.getAttribute("data-i18n-placeholder") as keyof Translation);
   });
   document.title = t("page_title");
 }
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
-const PRODUCTS = [
-  { id: 1, product_name: "Wireless Headphones", input_price: 45,   output_price: 89.99,  quantity: 120 },
-  { id: 2, product_name: "Running Shoes",        input_price: 38,   output_price: 74.99,  quantity: 60  },
-  { id: 3, product_name: "Coffee Beans 1kg",     input_price: 12,   output_price: 22.50,  quantity: 300 },
-  { id: 4, product_name: "Yoga Mat",             input_price: 18,   output_price: 35.00,  quantity: 80  },
-  { id: 5, product_name: "Steel Water Bottle",   input_price: 9.50, output_price: 19.99,  quantity: 200 },
+interface ProductName {
+  uz: string;
+  uz_cyr: string;
+  en: string;
+}
+
+interface Product {
+  id: number;
+  name: ProductName;
+  input_price: number;
+  output_price: number;
+  quantity: number;
+}
+
+type TransactionType = "INPUT" | "OUTPUT";
+
+interface Transaction {
+  id: number;
+  product_id: number;
+  type: TransactionType;
+  quantity: number;
+  price: number;
+  created_at: string;
+}
+
+const PRODUCTS: Product[] = [
+  { id: 1, name: { uz: "Simsiz quloqchinlar",  uz_cyr: "Симсиз қулоқчинлар",  en: "Wireless Headphones" }, input_price: 45,   output_price: 89.99,  quantity: 120 },
+  { id: 2, name: { uz: "Yugurish poyabzali",   uz_cyr: "Югуриш пойабзали",    en: "Running Shoes"       }, input_price: 38,   output_price: 74.99,  quantity: 60  },
+  { id: 3, name: { uz: "Qahva donlari 1kg",    uz_cyr: "Қаҳва донлари 1кг",   en: "Coffee Beans 1kg"    }, input_price: 12,   output_price: 22.50,  quantity: 300 },
+  { id: 4, name: { uz: "Yoga matasi",          uz_cyr: "Йога матаси",          en: "Yoga Mat"            }, input_price: 18,   output_price: 35.00,  quantity: 80  },
+  { id: 5, name: { uz: "Po'lat suv idishi",    uz_cyr: "Пўлат сув идиши",     en: "Steel Water Bottle"  }, input_price: 9.50, output_price: 19.99,  quantity: 200 },
 ];
 
-let transactions = [
+let transactions: Transaction[] = [
   { id: 1, product_id: 1, type: "INPUT",  quantity: 50, price: 45,    created_at: "2024-11-01T09:00:00Z" },
   { id: 2, product_id: 3, type: "OUTPUT", quantity: 30, price: 22.50, created_at: "2024-11-03T11:20:00Z" },
   { id: 3, product_id: 2, type: "INPUT",  quantity: 20, price: 38,    created_at: "2024-11-05T14:30:00Z" },
@@ -196,72 +275,76 @@ let nextId = 7;
 
 const PAGE_SIZE = 8;
 let currentPage = 1;
-let selectedType = "INPUT";
+let selectedType: TransactionType = "INPUT";
 
 // ─── DOM Refs ──────────────────────────────────────────────────────────────
 
-const modalBackdrop  = document.getElementById("modal-backdrop");
-const openModalBtn   = document.getElementById("open-modal-btn");
-const closeModalBtn  = document.getElementById("close-modal-btn");
-const cancelBtn      = document.getElementById("cancel-btn");
-const saveBtn        = document.getElementById("save-btn");
-const searchInput    = document.getElementById("search-input");
-const typeFilter     = document.getElementById("type-filter");
-const productFilter  = document.getElementById("product-filter");
-const exportBtn      = document.getElementById("export-btn");
-const tbody          = document.getElementById("txn-tbody");
-const emptyState     = document.getElementById("empty-state");
-const paginationEl   = document.getElementById("pagination");
-const topbarDate     = document.getElementById("topbar-date");
+const modalBackdrop  = document.getElementById("modal-backdrop") as HTMLElement;
+const openModalBtn   = document.getElementById("open-modal-btn") as HTMLButtonElement;
+const closeModalBtn  = document.getElementById("close-modal-btn") as HTMLButtonElement;
+const cancelBtn      = document.getElementById("cancel-btn") as HTMLButtonElement;
+const saveBtn        = document.getElementById("save-btn") as HTMLButtonElement;
+const searchInput    = document.getElementById("search-input") as HTMLInputElement;
+const typeFilter     = document.getElementById("type-filter") as HTMLSelectElement;
+const productFilter  = document.getElementById("product-filter") as HTMLSelectElement;
+const exportBtn      = document.getElementById("export-btn") as HTMLButtonElement;
+const tbody          = document.getElementById("txn-tbody") as HTMLTableSectionElement;
+const emptyState     = document.getElementById("empty-state") as HTMLElement;
+const paginationEl   = document.getElementById("pagination") as HTMLElement;
+const topbarDate     = document.getElementById("topbar-date") as HTMLElement;
 
-const fProduct  = document.getElementById("f-product");
-const fQuantity = document.getElementById("f-quantity");
-const fPrice    = document.getElementById("f-price");
+const fProduct  = document.getElementById("f-product") as HTMLSelectElement;
+const fQuantity = document.getElementById("f-quantity") as HTMLInputElement;
+const fPrice    = document.getElementById("f-price") as HTMLInputElement;
 
-const errProduct  = document.getElementById("err-product");
-const errQuantity = document.getElementById("err-quantity");
-const errPrice    = document.getElementById("err-price");
+const errProduct  = document.getElementById("err-product") as HTMLElement;
+const errQuantity = document.getElementById("err-quantity") as HTMLElement;
+const errPrice    = document.getElementById("err-price") as HTMLElement;
 
-const summaryTotal = document.getElementById("summary-total");
-const summaryStock = document.getElementById("summary-stock");
-const summaryAfter = document.getElementById("summary-after");
+const summaryTotal = document.getElementById("summary-total") as HTMLElement;
+const summaryStock = document.getElementById("summary-stock") as HTMLElement;
+const summaryAfter = document.getElementById("summary-after") as HTMLElement;
 
-const kpiInputQty  = document.getElementById("kpi-input-qty");
-const kpiInputVal  = document.getElementById("kpi-input-val");
-const kpiOutputQty = document.getElementById("kpi-output-qty");
-const kpiOutputVal = document.getElementById("kpi-output-val");
-const kpiProfit    = document.getElementById("kpi-profit");
-const kpiTotal     = document.getElementById("kpi-total");
+const kpiInputQty  = document.getElementById("kpi-input-qty") as HTMLElement;
+const kpiInputVal  = document.getElementById("kpi-input-val") as HTMLElement;
+const kpiOutputQty = document.getElementById("kpi-output-qty") as HTMLElement;
+const kpiOutputVal = document.getElementById("kpi-output-val") as HTMLElement;
+const kpiProfit    = document.getElementById("kpi-profit") as HTMLElement;
+const kpiTotal     = document.getElementById("kpi-total") as HTMLElement;
 
-const toast = document.getElementById("toast");
+const toast = document.getElementById("toast") as HTMLElement;
 
 // ─── Init ──────────────────────────────────────────────────────────────────
 
-function init() {
+function getLangKey(): keyof ProductName {
+  if (currentLang === "uz") return "uz";
+  if (currentLang === "cyril") return "uz_cyr";
+  return "en";
+}
+
+function init(): void {
   topbarDate.textContent = new Date().toLocaleDateString("en-US", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   });
 
-  // Populate product selects
   PRODUCTS.forEach(p => {
     const optFilter = document.createElement("option");
-    optFilter.value = p.id;
-    optFilter.textContent = p.product_name;
+    optFilter.value = String(p.id);
+    optFilter.textContent = p.name.en;
     productFilter.appendChild(optFilter);
 
     const optForm = document.createElement("option");
-    optForm.value = p.id;
-    optForm.dataset.input  = p.input_price;
-    optForm.dataset.output = p.output_price;
-    optForm.dataset.stock  = p.quantity;
-    optForm.textContent = p.product_name;
+    optForm.value = String(p.id);
+    optForm.dataset.input  = String(p.input_price);
+    optForm.dataset.output = String(p.output_price);
+    optForm.dataset.stock  = String(p.quantity);
+    optForm.textContent = p.name.en;
     fProduct.appendChild(optForm);
   });
 
-  // Language buttons
-  document.querySelectorAll(".lang-btn").forEach(btn => {
+  document.querySelectorAll<HTMLButtonElement>(".lang-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      currentLang = btn.dataset.lang;
+      currentLang = btn.dataset.lang as Lang;
       document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       applyTranslations();
@@ -269,35 +352,30 @@ function init() {
     });
   });
 
-  // Type toggle
-  document.querySelectorAll(".type-btn").forEach(btn => {
+  document.querySelectorAll<HTMLButtonElement>(".type-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".type-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      selectedType = btn.dataset.type;
+      selectedType = btn.dataset.type as TransactionType;
       autofillPrice();
       updateSummary();
     });
   });
 
-  // Modal
   openModalBtn.addEventListener("click", openModal);
   closeModalBtn.addEventListener("click", closeModal);
   cancelBtn.addEventListener("click", closeModal);
   saveBtn.addEventListener("click", handleSave);
-  modalBackdrop.addEventListener("click", e => { if (e.target === modalBackdrop) closeModal(); });
+  modalBackdrop.addEventListener("click", (e: MouseEvent) => { if (e.target === modalBackdrop) closeModal(); });
 
-  // Live updates
   fProduct.addEventListener("change", () => { autofillPrice(); updateSummary(); });
   fQuantity.addEventListener("input", updateSummary);
   fPrice.addEventListener("input", updateSummary);
 
-  // Filters
   searchInput.addEventListener("input", () => { currentPage = 1; renderTable(); });
   typeFilter.addEventListener("change", () => { currentPage = 1; renderTable(); });
   productFilter.addEventListener("change", () => { currentPage = 1; renderTable(); });
 
-  // Export
   exportBtn.addEventListener("click", exportCSV);
 
   renderAll();
@@ -306,15 +384,17 @@ function init() {
 
 // ─── Modal ─────────────────────────────────────────────────────────────────
 
-function openModal() {
+function openModal(): void {
   modalBackdrop.classList.add("open");
   fProduct.focus();
 }
-function closeModal() {
+
+function closeModal(): void {
   modalBackdrop.classList.remove("open");
   resetForm();
 }
-function resetForm() {
+
+function resetForm(): void {
   fProduct.value = "";
   fQuantity.value = "";
   fPrice.value = "";
@@ -326,22 +406,22 @@ function resetForm() {
   summaryAfter.style.color = "";
 }
 
-function autofillPrice() {
+function autofillPrice(): void {
   const opt = fProduct.selectedOptions[0];
   if (!opt || !opt.value) return;
   const price = selectedType === "INPUT"
-    ? parseFloat(opt.dataset.input)
-    : parseFloat(opt.dataset.output);
+    ? parseFloat(opt.dataset.input!)
+    : parseFloat(opt.dataset.output!);
   fPrice.value = isNaN(price) ? "" : price.toFixed(2);
 }
 
 // ─── Summary preview ───────────────────────────────────────────────────────
 
-function updateSummary() {
+function updateSummary(): void {
   const opt = fProduct.selectedOptions[0];
   const qty = parseInt(fQuantity.value, 10);
   const price = parseFloat(fPrice.value);
-  const stock = opt && opt.value ? parseInt(opt.dataset.stock, 10) : NaN;
+  const stock = opt && opt.value ? parseInt(opt.dataset.stock!, 10) : NaN;
 
   summaryStock.textContent = isNaN(stock) ? "—" : stock.toLocaleString();
 
@@ -363,13 +443,13 @@ function updateSummary() {
 
 // ─── Validation ────────────────────────────────────────────────────────────
 
-function validate() {
+function validate(): boolean {
   let valid = true;
 
-  function setErr(input, span, msg) {
+  function setErr(input: HTMLElement, span: HTMLElement, msg: string): void {
     input.classList.add("error"); span.textContent = msg; valid = false;
   }
-  function clearErr(input, span) {
+  function clearErr(input: HTMLElement, span: HTMLElement): void {
     input.classList.remove("error"); span.textContent = "";
   }
 
@@ -379,10 +459,9 @@ function validate() {
   const qty = parseInt(fQuantity.value, 10);
   if (isNaN(qty) || qty <= 0) setErr(fQuantity, errQuantity, "Enter a valid quantity.");
   else {
-    // Stock check for OUTPUT
     if (selectedType === "OUTPUT") {
       const opt = fProduct.selectedOptions[0];
-      const stock = parseInt(opt?.dataset.stock, 10) || 0;
+      const stock = parseInt(opt?.dataset.stock ?? "0", 10) || 0;
       if (qty > stock) {
         setErr(fQuantity, errQuantity, t("stock_overflow"));
         valid = false;
@@ -401,7 +480,7 @@ function validate() {
 
 // ─── Save ──────────────────────────────────────────────────────────────────
 
-function handleSave() {
+function handleSave(): void {
   if (!validate()) return;
 
   const opt = fProduct.selectedOptions[0];
@@ -409,7 +488,7 @@ function handleSave() {
   const qty = parseInt(fQuantity.value, 10);
   const price = parseFloat(fPrice.value);
 
-  const txn = {
+  const txn: Transaction = {
     id: nextId++,
     product_id: productId,
     type: selectedType,
@@ -418,15 +497,13 @@ function handleSave() {
     created_at: new Date().toISOString(),
   };
 
-  // Update in-memory stock
   const product = PRODUCTS.find(p => p.id === productId);
   if (product) {
     product.quantity = selectedType === "INPUT"
       ? product.quantity + qty
       : product.quantity - qty;
-    // Sync select options
-    document.querySelectorAll(`#f-product option[value="${productId}"]`).forEach(o => {
-      o.dataset.stock = product.quantity;
+    document.querySelectorAll<HTMLOptionElement>(`#f-product option[value="${productId}"]`).forEach(o => {
+      o.dataset.stock = String(product.quantity);
     });
   }
 
@@ -434,29 +511,29 @@ function handleSave() {
   currentPage = 1;
   renderAll();
   closeModal();
-  showToast(t("toast_added", opt.textContent, selectedType));
+  showToast(t("toast_added", opt.textContent!, selectedType));
 }
 
 // ─── Delete ────────────────────────────────────────────────────────────────
 
-function deleteTransaction(id) {
-  transactions = transactions.filter(t => t.id !== id);
+function deleteTransaction(id: number): void {
+  transactions = transactions.filter(tx => tx.id !== id);
   if (currentPage > Math.ceil(filtered().length / PAGE_SIZE)) currentPage = 1;
   renderAll();
   showToast(t("toast_deleted", id));
 }
-window.deleteTransaction = deleteTransaction;
+(window as any).deleteTransaction = deleteTransaction;
 
 // ─── Filter & paginate ─────────────────────────────────────────────────────
 
-function filtered() {
+function filtered(): Transaction[] {
   const query = searchInput.value.trim().toLowerCase();
-  const typeVal = typeFilter.value;
+  const typeVal = typeFilter.value as TransactionType | "";
   const prodVal = productFilter.value ? parseInt(productFilter.value, 10) : null;
 
   return transactions.filter(tx => {
     const product = PRODUCTS.find(p => p.id === tx.product_id);
-    const name = product ? product.product_name.toLowerCase() : "";
+    const name = product ? product.name[getLangKey()].toLowerCase() : "";
     const matchSearch = name.includes(query);
     const matchType   = !typeVal || tx.type === typeVal;
     const matchProd   = prodVal === null || tx.product_id === prodVal;
@@ -466,14 +543,14 @@ function filtered() {
 
 // ─── KPIs ──────────────────────────────────────────────────────────────────
 
-function renderKPIs() {
-  const inputs  = transactions.filter(t => t.type === "INPUT");
-  const outputs = transactions.filter(t => t.type === "OUTPUT");
+function renderKPIs(): void {
+  const inputs  = transactions.filter(tx => tx.type === "INPUT");
+  const outputs = transactions.filter(tx => tx.type === "OUTPUT");
 
-  const inputQty  = inputs.reduce((s, t) => s + t.quantity, 0);
-  const outputQty = outputs.reduce((s, t) => s + t.quantity, 0);
-  const inputVal  = inputs.reduce((s, t) => s + t.quantity * t.price, 0);
-  const outputVal = outputs.reduce((s, t) => s + t.quantity * t.price, 0);
+  const inputQty  = inputs.reduce((s, tx) => s + tx.quantity, 0);
+  const outputQty = outputs.reduce((s, tx) => s + tx.quantity, 0);
+  const inputVal  = inputs.reduce((s, tx) => s + tx.quantity * tx.price, 0);
+  const outputVal = outputs.reduce((s, tx) => s + tx.quantity * tx.price, 0);
   const profit    = outputVal - inputVal;
 
   kpiInputQty.textContent  = inputQty.toLocaleString();
@@ -487,7 +564,7 @@ function renderKPIs() {
 
 // ─── Table ─────────────────────────────────────────────────────────────────
 
-function renderTable() {
+function renderTable(): void {
   const rows = filtered();
   const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
   if (currentPage > totalPages) currentPage = totalPages;
@@ -504,7 +581,7 @@ function renderTable() {
 
   tbody.innerHTML = pageRows.map((tx, i) => {
     const product = PRODUCTS.find(p => p.id === tx.product_id);
-    const name = product ? escHtml(product.product_name) : "Unknown";
+    const name = product ? escHtml(product.name[getLangKey()]) : "Unknown";
     const total = tx.quantity * tx.price;
     const date = new Date(tx.created_at).toLocaleDateString("en-GB", {
       day: "2-digit", month: "short", year: "numeric"
@@ -534,7 +611,7 @@ function renderTable() {
   renderPagination(totalPages);
 }
 
-function renderPagination(totalPages) {
+function renderPagination(totalPages: number): void {
   if (totalPages <= 1) { paginationEl.innerHTML = ""; return; }
 
   let html = `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>`;
@@ -545,22 +622,22 @@ function renderPagination(totalPages) {
   paginationEl.innerHTML = html;
 }
 
-function goPage(n) {
+function goPage(n: number): void {
   currentPage = n;
   renderTable();
 }
-window.goPage = goPage;
+(window as any).goPage = goPage;
 
 // ─── Export CSV ────────────────────────────────────────────────────────────
 
-function exportCSV() {
+function exportCSV(): void {
   const rows = filtered();
-  const header = ["ID","Product","Type","Quantity","Unit Price","Total","Date"];
+  const header = ["ID", "Product", "Type", "Quantity", "Unit Price", "Total", "Date"];
   const lines = [header.join(",")];
 
   rows.forEach(tx => {
     const product = PRODUCTS.find(p => p.id === tx.product_id);
-    const name = product ? `"${product.product_name}"` : "Unknown";
+    const name = product ? `"${product.name[getLangKey()]}"` : "Unknown";
     const date = new Date(tx.created_at).toLocaleDateString("en-GB");
     lines.push([tx.id, name, tx.type, tx.quantity, tx.price.toFixed(2), (tx.quantity * tx.price).toFixed(2), date].join(","));
   });
@@ -574,12 +651,13 @@ function exportCSV() {
 
 // ─── Render All ────────────────────────────────────────────────────────────
 
-function renderAll() { renderKPIs(); renderTable(); }
+function renderAll(): void { renderKPIs(); renderTable(); }
 
 // ─── Toast ─────────────────────────────────────────────────────────────────
 
-let toastTimer = null;
-function showToast(msg) {
+let toastTimer: ReturnType<typeof setTimeout> | null = null;
+
+function showToast(msg: string): void {
   toast.textContent = msg;
   toast.classList.add("show");
   if (toastTimer) clearTimeout(toastTimer);
@@ -588,13 +666,16 @@ function showToast(msg) {
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
-function fmt(n) {
+function fmt(n: number): string {
   return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-function escHtml(str) {
+
+function escHtml(str: string): string {
   return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
 // ─── Boot ──────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", init);
+
+export {};

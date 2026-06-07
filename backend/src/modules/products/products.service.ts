@@ -8,11 +8,11 @@ export class ProductService {
     constructor(private readonly prisma: PrismaService) {}
 
     async getAll() {
-        const products = await this.prisma.product.findMany();
+        const products = await this.prisma.product.findMany({include: {category: true}});
 
         return {
             success: true,
-            products
+            data: products
         }
     }
 

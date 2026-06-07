@@ -8,7 +8,6 @@ export class ProductController {
     constructor(private readonly service: ProductService) { }
 
     @Get()
-    @Render('dashboard')
     async getAll() {
         return await this.service.getAll()
     }
