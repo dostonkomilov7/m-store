@@ -8,8 +8,18 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id        Int    @id @default(autoincrement())
+  full_name String @db.VarChar()
+  age       Int    @db.SmallInt
+  email     String @unique @db.VarChar()
+  password  String @db.VarChar()
+
+  @@map("users")
+}
+
 model Category {
-  id   Int    @id @default(autoincrement())
+  id   Int  @id @default(autoincrement())
   name Json @unique @db.JsonB
 
   products Product[]
@@ -42,5 +52,4 @@ model Transaction {
   price    Decimal @db.Decimal(10, 2)
 
   @@map("transactions")
-
 }

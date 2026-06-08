@@ -1,21 +1,13 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "users" (
+    "id" SERIAL NOT NULL,
+    "full_name" VARCHAR NOT NULL,
+    "age" SMALLINT NOT NULL,
+    "email" VARCHAR NOT NULL,
+    "password" VARCHAR NOT NULL,
 
-  - You are about to drop the `Category` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Transaction` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE "Transaction" DROP CONSTRAINT "Transaction_product_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "products" DROP CONSTRAINT "products_category_id_fkey";
-
--- DropTable
-DROP TABLE "Category";
-
--- DropTable
-DROP TABLE "Transaction";
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "categories" (
@@ -23,6 +15,19 @@ CREATE TABLE "categories" (
     "name" JSONB NOT NULL,
 
     CONSTRAINT "categories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "products" (
+    "id" SERIAL NOT NULL,
+    "name" JSONB NOT NULL,
+    "description" JSONB,
+    "input_price" DECIMAL(10,2) NOT NULL,
+    "output_price" DECIMAL(10,2) NOT NULL,
+    "quantity" SMALLINT NOT NULL DEFAULT 1,
+    "category_id" SMALLINT NOT NULL,
+
+    CONSTRAINT "products_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -38,6 +43,9 @@ CREATE TABLE "transactions" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "categories_name_key" ON "categories"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "products_name_key" ON "products"("name");
 
 -- AddForeignKey
 ALTER TABLE "products" ADD CONSTRAINT "products_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
