@@ -62,12 +62,12 @@ const TRANSLATIONS: Record<Lang, Translation> = {
     nav_transactions: "Transactions",
     nav_categories: "Categories",
     nav_analytics: "Analytics",
-    admin_label: "Admin",
-    admin_role: "Superuser",
+    admin_label: "Muhammadjon",
+    admin_role: "Admin",
     btn_add_transaction: "Add Transaction",
     kpi_total_input: "Total Input",
     kpi_total_output: "Total Output",
-    kpi_gross_profit: "Gross Profit",
+    kpi_gross_profit: "Gross Profit (UZS)",
     kpi_profit_sub: "revenue − cost",
     kpi_total_txn: "Total Transactions",
     kpi_all_time: "all time",
@@ -90,7 +90,7 @@ const TRANSLATIONS: Record<Lang, Translation> = {
     modal_title: "New Transaction",
     label_product: "Product",
     label_qty: "Quantity",
-    label_price: "Unit Price ($)",
+    label_price: "Unit Price (SUM)",
     type_input: "INPUT",
     type_output: "OUTPUT",
     summary_total_cost: "Total Amount",
@@ -113,12 +113,12 @@ const TRANSLATIONS: Record<Lang, Translation> = {
     nav_transactions: "Tranzaksiyalar",
     nav_categories: "Kategoriyalar",
     nav_analytics: "Tahlil",
-    admin_label: "Admin",
-    admin_role: "Superuser",
+    admin_label: "Muhammadjon",
+    admin_role: "Admin",
     btn_add_transaction: "Tranzaksiya qo'shish",
     kpi_total_input: "Jami kirish",
     kpi_total_output: "Jami chiqish",
-    kpi_gross_profit: "Yalpi foyda",
+    kpi_gross_profit: "Yalpi foyda (SO'M)",
     kpi_profit_sub: "daromad − xarajat",
     kpi_total_txn: "Jami tranzaksiyalar",
     kpi_all_time: "barcha vaqt",
@@ -141,7 +141,7 @@ const TRANSLATIONS: Record<Lang, Translation> = {
     modal_title: "Yangi tranzaksiya",
     label_product: "Mahsulot",
     label_qty: "Miqdor",
-    label_price: "Birlik narxi ($)",
+    label_price: "Birlik narxi (SO'M)",
     type_input: "KIRISH",
     type_output: "CHIQISH",
     summary_total_cost: "Umumiy summa",
@@ -164,12 +164,12 @@ const TRANSLATIONS: Record<Lang, Translation> = {
     nav_transactions: "Трансакциялар",
     nav_categories: "Категориялар",
     nav_analytics: "Таҳлил",
-    admin_label: "Админ",
-    admin_role: "Суперфойдаланувчи",
+    admin_label: "Муҳаммаджон",
+    admin_role: "Админ",
     btn_add_transaction: "Трансакция қўшиш",
     kpi_total_input: "Жами кириш",
     kpi_total_output: "Жами чиқиш",
-    kpi_gross_profit: "Ялпи фойда",
+    kpi_gross_profit: "Ялпи фойда (сўм)",
     kpi_profit_sub: "даромад − харажат",
     kpi_total_txn: "Жами трансакциялар",
     kpi_all_time: "барча вақт",
@@ -192,7 +192,7 @@ const TRANSLATIONS: Record<Lang, Translation> = {
     modal_title: "Янги трансакция",
     label_product: "Маҳсулот",
     label_qty: "Миқдор",
-    label_price: "Бирлик нархи ($)",
+    label_price: "Бирлик нархи (сўм)",
     type_input: "КИРИШ",
     type_output: "ЧИҚИШ",
     summary_total_cost: "Умумий сумма",
@@ -426,7 +426,7 @@ function updateSummary(): void {
   summaryStock.textContent = isNaN(stock) ? "—" : stock.toLocaleString();
 
   if (!isNaN(qty) && !isNaN(price)) {
-    summaryTotal.textContent = "$" + (qty * price).toLocaleString("en-US", { minimumFractionDigits: 2 });
+    summaryTotal.textContent = (qty * price).toLocaleString("en-US", { minimumFractionDigits: 2 }) + ' UZS';
   } else {
     summaryTotal.textContent = "—";
   }
@@ -554,10 +554,10 @@ function renderKPIs(): void {
   const profit    = outputVal - inputVal;
 
   kpiInputQty.textContent  = inputQty.toLocaleString();
-  kpiInputVal.textContent  = "$" + fmt(inputVal);
+  kpiInputVal.textContent  = fmt(inputVal) + " UZS";
   kpiOutputQty.textContent = outputQty.toLocaleString();
-  kpiOutputVal.textContent = "$" + fmt(outputVal);
-  kpiProfit.textContent    = (profit >= 0 ? "+" : "") + "$" + fmt(Math.abs(profit));
+  kpiOutputVal.textContent = fmt(outputVal) + " UZS";
+  kpiProfit.textContent    = (profit >= 0 ? "+" : "") + fmt(Math.abs(profit));
   kpiProfit.style.color    = profit >= 0 ? "var(--amber)" : "var(--danger)";
   kpiTotal.textContent     = transactions.length.toLocaleString();
 }
@@ -600,8 +600,8 @@ function renderTable(): void {
         <td class="product-name-cell">${name}</td>
         <td><span class="type-badge type-badge--${tx.type}">${typeSvg}${typeLabel}</span></td>
         <td>${tx.quantity.toLocaleString()}</td>
-        <td>$${fmt(tx.price)}</td>
-        <td class="total-cell">$${fmt(total)}</td>
+        <td>${fmt(tx.price)}</td>
+        <td class="total-cell">${fmt(total)}</td>
         <td class="date-cell">${date}</td>
         <td><button class="btn--danger-sm" onclick="deleteTransaction(${tx.id})">${t("btn_delete")}</button></td>
       </tr>

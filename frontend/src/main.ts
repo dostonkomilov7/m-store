@@ -15,7 +15,7 @@ export const getCookie = (name: string) => {
 export const redirectIfAuth = async () => {
     if (getCookie("accessToken")) {
         const role = await cookieStore.get('role');
-        if (role?.value === 'Doctor') {
+        if (role?.value === 'Doctor') { 
             window.location.href = "/src/pages/doctor-dashboard";
         } else if (role?.value === 'User') {
             window.location.href = "/src/pages/user-dashboard";
